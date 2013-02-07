@@ -8,5 +8,6 @@ namespace AzureSimpleQueue
 {
     public interface ISimpleQueueConsumer
     {
+        ISimpleQueueExecutor StartQueuedServices(params object[] services);
     }
 }
