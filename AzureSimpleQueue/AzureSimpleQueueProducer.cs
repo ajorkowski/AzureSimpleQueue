@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace AzureSimpleQueue
 {
-    public class AzureSimpleQueueProducer : ISimpleQueueProducer
+    public sealed class AzureSimpleQueueProducer : ISimpleQueueProducer
     {
         private readonly ICloudQueueStorage _queue;
 

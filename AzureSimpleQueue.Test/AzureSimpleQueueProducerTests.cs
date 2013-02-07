@@ -8,7 +8,7 @@ using AzureSimpleQueue.Test.Services;
 namespace AzureSimpleQueue.Test
 {
     [TestFixture]
-    public class AzureSimpleQueueProducerTest
+    public class AzureSimpleQueueProducerTests
     {
         protected ICloudQueueStorage _cloudQueue;
         protected AzureSimpleQueueProducer _producer;
@@ -21,7 +21,7 @@ namespace AzureSimpleQueue.Test
         }
 
         [TestFixture]
-        public class QueueMethod : AzureSimpleQueueProducerTest
+        public class QueueMethod : AzureSimpleQueueProducerTests
         {
             [Test]
             public void ValidServiceCallCreatesValidQueryMessage()

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Experience.CloudFx.Framework.Extensibility;
 
 namespace AzureSimpleQueue
 {
     public interface ISimpleQueueConsumer
     {
-        ISimpleQueueExecutor StartQueuedServices(params object[] services);
+        ISimpleQueueExecutor AttachQueuedServices(string storageAccountConnectionString, params object[] services);
+        ISimpleQueueExecutor AttachQueuedServices(string storageAccountConnectionString, IExtensibleComponent component, params object[] services);
     }
 }
