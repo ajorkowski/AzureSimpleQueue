@@ -8,20 +8,20 @@ using AzureSimpleQueue.Test.Services;
 namespace AzureSimpleQueue.Test
 {
     [TestFixture]
-    public class AzureSimpleQueueProducerTests
+    public class AzureSimpleQueueTests
     {
         protected ICloudQueueStorage _cloudQueue;
-        protected AzureSimpleQueueProducer _producer;
+        protected AzureSimpleQueue<INotificationService> _queue;
 
         [SetUp]
         public void Init()
         {
             _cloudQueue = Substitute.For<ICloudQueueStorage>();
-            _producer = new AzureSimpleQueueProducer(_cloudQueue);
+            _queue = new AzureSimpleQueue<INotificationService>(_cloudQueue);
         }
 
         [TestFixture]
-        public class QueueMethod : AzureSimpleQueueProducerTests
+        public class QueueMethod : AzureSimpleQueueTests
         {
             [Test]
             public void ValidServiceCallCreatesValidQueryMessage()
@@ -29,7 +29,7 @@ namespace AzureSimpleQueue.Test
                 QueueMessage message = null;
                 AttachNotificationServiceExpectation(q => { message = q; });
 
-                _producer.Queue<INotificationService>(s => s.DeleteAllNotifications(2));
+                _queue.Queue(s => s.DeleteAllNotifications(2));
 
                 Assert.AreEqual("DeleteAllNotifications", message.Method);
                 Assert.AreEqual("2", message.SerializedArguments.Single());
@@ -42,7 +42,7 @@ namespace AzureSimpleQueue.Test
                 AttachNotificationServiceExpectation(q => { message = q; });
 
                 var val = 4;
-                _producer.Queue<INotificationService>(s => s.DeleteAllNotifications(val));
+                _queue.Queue(s => s.DeleteAllNotifications(val));
 
                 Assert.AreEqual("DeleteAllNotifications", message.Method);
                 Assert.AreEqual("4", message.SerializedArguments.Single());
@@ -55,7 +55,7 @@ namespace AzureSimpleQueue.Test
                 AttachNotificationServiceExpectation(q => { message = q; });
 
                 var val = 4;
-                _producer.Queue<INotificationService>(s => s.DeleteAllNotifications(int.Parse(val.ToString())));
+                _queue.Queue(s => s.DeleteAllNotifications(int.Parse(val.ToString())));
 
                 Assert.AreEqual("DeleteAllNotifications", message.Method);
                 Assert.AreEqual("4", message.SerializedArguments.Single());
@@ -67,7 +67,7 @@ namespace AzureSimpleQueue.Test
                 QueueMessage message = null;
                 AttachNotificationServiceExpectation(q => { message = q; });
 
-                _producer.Queue<INotificationService>(s => s.CreateNotification(2, "someid", "some message"));
+                _queue.Queue(s => s.CreateNotification(2, "someid", "some message"));
 
                 var args = message.SerializedArguments.ToList();
                 Assert.AreEqual("CreateNotification", message.Method);
@@ -82,7 +82,7 @@ namespace AzureSimpleQueue.Test
                 QueueMessage message = null;
                 AttachNotificationServiceExpectation(q => { message = q; });
 
-                _producer.Queue<INotificationService>(s => s.CreateNotification(new ComplexType() 
+                _queue.Queue(s => s.CreateNotification(new ComplexType() 
                 { 
                     UserId = 3, 
                     NotificationId = "someid", 
@@ -97,37 +97,38 @@ namespace AzureSimpleQueue.Test
             [ExpectedException(typeof(InvalidOperationException))]
             public void ExceptionWhenUsingTheServiceInTheArgs()
             {
-                _producer.Queue<INotificationService>(n => n.DeleteAllNotifications(int.Parse(n.ToString())));
+                _queue.Queue(n => n.DeleteAllNotifications(int.Parse(n.ToString())));
             }
 
             [Test]
             [ExpectedException(typeof(InvalidOperationException))]
             public void ExceptionWhenBaseObjectDoesntMatch()
             {
-                _producer.Queue<INotificationService>(n => _producer.ToString());
+                _queue.Queue(n => _queue.ToString());
             }
 
             [Test]
             [ExpectedException(typeof(InvalidOperationException))]
             public void ExceptionWhenCallingMethodWithReturnValue()
             {
-                _producer.Queue<INotificationService>(n => n.FakeService());
+                _queue.Queue(n => n.FakeService());
             }
 
             [Test]
             [ExpectedException(typeof(InvalidOperationException))]
             public void ServiceMustHaveQueryAttribute()
             {
-                _producer.Queue<IFakeService>(s => s.SomeMethod());
+                new AzureSimpleQueue<IFakeService>(_cloudQueue);
             }
 
             private void AttachNotificationServiceExpectation(Action<QueueMessage> messageSave)
             {
+                // We are overriding the base put definition - the extension methods call this
                 _cloudQueue.Put("Notification", Arg.Any<IObservable<QueueMessage>>()).Returns(c =>
                 {
                     var obs = (IObservable<QueueMessage>)c.Args()[1];
                     obs.Subscribe(messageSave);
-                    return null;
+                    return obs;
                 });
             }
         }

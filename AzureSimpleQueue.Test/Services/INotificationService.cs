@@ -12,8 +12,13 @@
     {
         void CreateNotification(long userId, string notificationId, string message);
         void CreateNotification(ComplexType notificationDetails);
+
         void DeleteAllNotifications(long userId);
 
         string FakeService();
+
+        // Need this to test overridden methods
+        void MethodThatDoesntWork(int id);
+        void MethodThatDoesntWork(string id);
     }
 }

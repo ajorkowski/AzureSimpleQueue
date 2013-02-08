@@ -6,7 +6,7 @@ namespace AzureSimpleQueue
     {
         IEnumerable<ISimpleQueueListener> Listeners { get; }
 
-        void StartServices(int threadCount = 1);
-        void StopServices();
+        void Start(int threadCount = 1);
+        void Stop();
     }
 }

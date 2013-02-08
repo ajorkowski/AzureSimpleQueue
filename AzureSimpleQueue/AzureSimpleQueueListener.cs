@@ -4,6 +4,7 @@ using System.Reflection;
 using Microsoft.Experience.CloudFx.Extensions.Storage;
 using System;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace AzureSimpleQueue
 {
@@ -27,17 +28,18 @@ namespace AzureSimpleQueue
 
         private void ExecuteServiceMethod(QueueMessage message)
         {
+            var sArgs = message.SerializedArguments == null ? new List<string>() : message.SerializedArguments.ToList();
+
             // Find a matching method (note we only care about the name and no of arguments when matching...)
-            var sArgs = message.SerializedArguments.ToList();
             var possibleMethods = (from m in _methods.Value
                                    let p = m.GetParameters()
                                    where m.Name == message.Method
                                          && p.Length == sArgs.Count
                                    select new { Method = m, Parameters = p }).ToList();
 
-            if (possibleMethods.Count > 0)
+            if (possibleMethods.Count > 1)
             {
-                throw new InvalidOperationException("Cannot have more than one method with the same name and the same number of parameters (even if they are different types)");
+                throw new InvalidOperationException("The method '" + message.Method + "' with " + sArgs.Count + " parameter(s) has more than one overload, which is not supported (even if they are different types...)");
             }
 
             if (possibleMethods.Count == 0)

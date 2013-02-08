@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reactive.Linq;
-using Microsoft.Experience.CloudFx.Framework.Storage;
 using System.Linq.Expressions;
+using Microsoft.Experience.CloudFx.Framework.Storage;
 using Newtonsoft.Json;
 
 namespace AzureSimpleQueue
 {
-    public sealed class AzureSimpleQueueProducer : ISimpleQueueProducer
+    public class AzureSimpleQueue<T> : ISimpleQueue<T>
     {
         private readonly ICloudQueueStorage _queue;
+        private readonly string _name;
 
-        public AzureSimpleQueueProducer(ICloudQueueStorage queue)
+        public AzureSimpleQueue(ICloudQueueStorage queue)
         {
             _queue = queue;
-        }
 
-        public void Queue<T>(Expression<Action<T>> serviceAction)
-        {
             // Is this type actually a service
             var type = typeof (T);
             var attributes = type.GetCustomAttributes(typeof (QueuedServiceAttribute), true);
@@ -29,16 +26,19 @@ namespace AzureSimpleQueue
 
             // Get the name of the queue
             var attribute = attributes[0] as QueuedServiceAttribute;
-            var name = attribute.Name ?? type.Name;
+            _name = attribute.Name ?? type.Name;
+        }
 
+        public void Queue(Expression<Action<T>> serviceAction)
+        {
             // convert expression to message
             var message = FindMessage(serviceAction);
 
             // Send it off
-            _queue.Put(name, Observable.Return(message));
+            _queue.Put(_name, message);
         }
 
-        private QueueMessage FindMessage<T>(Expression<Action<T>> serviceAction)
+        private QueueMessage FindMessage(Expression<Action<T>> serviceAction)
         {
             var method = serviceAction.Body as MethodCallExpression;
             if(method == null)

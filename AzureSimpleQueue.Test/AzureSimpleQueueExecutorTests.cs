@@ -38,7 +38,7 @@ namespace AzureSimpleQueue.Test
             [Test]
             public void ExecutesStartOnEachListener()
             {
-                _executor.StartServices(4);
+                _executor.Start(4);
 
                 foreach (var listener in _listeners)
                 {
@@ -51,7 +51,7 @@ namespace AzureSimpleQueue.Test
             public void ExceptionWhenCalledWhenDisposed()
             {
                 _executor.Dispose();
-                _executor.StartServices();
+                _executor.Start();
             }
         }
 
@@ -61,7 +61,7 @@ namespace AzureSimpleQueue.Test
             [Test]
             public void ExecutesStopOnEachListener()
             {
-                _executor.StopServices();
+                _executor.Stop();
 
                 foreach (var listener in _listeners)
                 {
@@ -74,7 +74,7 @@ namespace AzureSimpleQueue.Test
             public void ExceptionWhenCalledWhenDisposed()
             {
                 _executor.Dispose();
-                _executor.StopServices();
+                _executor.Stop();
             }
         }
     }

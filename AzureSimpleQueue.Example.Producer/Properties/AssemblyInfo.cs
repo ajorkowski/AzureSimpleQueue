@@ -1,14 +1,15 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("AzureSimpleQueue")]
-[assembly: AssemblyDescription("A simple queue wrapper so that you can call queue services with easy to use functional expressions. Powered by the CloudFX library.")]
+[assembly: AssemblyTitle("AzureSimpleQueue.Example.Producer")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Felix Jorkowski (jorkowski.com)")]
-[assembly: AssemblyProduct("AzureSimpleQueue")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("AzureSimpleQueue.Example.Producer")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -19,6 +20,17 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("06287183-8108-465e-abc7-506a1d189b4b")]
+[assembly: Guid("4a3d7391-1cb7-45b2-a5e4-6cb57474a595")]
 
-[assembly: AssemblyVersion("0.1.*")]
+// Version information for an assembly consists of the following four values:
+//
+//      Major Version
+//      Minor Version 
+//      Build Number
+//      Revision
+//
+// You can specify all the values or you can default the Build and Revision Numbers 
+// by using the '*' as shown below:
+// [assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

@@ -8,23 +8,25 @@ namespace AzureSimpleQueue
 {
     public sealed class AzureSimpleQueueConsumer : ISimpleQueueConsumer
     {
-        public ISimpleQueueExecutor AttachQueuedServices(string storageAccountConnectionString, params object[] services)
+        private readonly IExtensibleComponent _component;
+
+        public AzureSimpleQueueConsumer(IExtensibleComponent component)
         {
-            return AttachQueuedServices(storageAccountConnectionString, null, services);
+            _component = component;
         }
 
-        public ISimpleQueueExecutor AttachQueuedServices(string storageAccountConnectionString, IExtensibleComponent component, params object[] services)
+        public ISimpleQueueExecutor AttachQueuedServices(string storageAccountConnectionString, params object[] services)
         {
             if(services == null || !services.Any())
             {
                 throw new InvalidOperationException("You must specify services to attach listeners to!");
             }
 
-            var listeners = services.Select(s => AttachService(storageAccountConnectionString, component, s)).ToList();
+            var listeners = services.Select(s => AttachService(storageAccountConnectionString, s)).ToList();
             return new AzureSimpleQueueExecutor(listeners);
         }
 
-        private ISimpleQueueListener AttachService(string storageAccountConnectionString, IExtensibleComponent component, object service)
+        private ISimpleQueueListener AttachService(string storageAccountConnectionString, object service)
         {
             // Search interfaces for 'QueuedServiceAttribute' def and get name
             string name = (from interfaceType in service.GetType().GetInterfaces() 
@@ -38,7 +40,7 @@ namespace AzureSimpleQueue
             }
 
             var location = new CloudQueueLocation { QueueName = name, StorageAccount = storageAccountConnectionString };
-            var listener = new CloudQueueListenerExtension<QueueMessage>(location, component);
+            var listener = new CloudQueueListenerExtension<QueueMessage>(location, _component);
             return new AzureSimpleQueueListener(listener, service);
         }
     }

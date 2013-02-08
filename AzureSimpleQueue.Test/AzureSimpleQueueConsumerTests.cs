@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using AzureSimpleQueue.Test.Services;
+using NSubstitute;
 using NUnit.Framework;
+using Microsoft.Experience.CloudFx.Framework.Extensibility;
 
 namespace AzureSimpleQueue.Test
 {
@@ -13,7 +15,7 @@ namespace AzureSimpleQueue.Test
         [SetUp]
         public void Init()
         {
-            _consumer = new AzureSimpleQueueConsumer();
+            _consumer = new AzureSimpleQueueConsumer(Substitute.For<IExtensibleComponent>());
         }
 
         [TestFixture]
@@ -22,7 +24,7 @@ namespace AzureSimpleQueue.Test
             [Test]
             public void AttachingRealServiceUsesCorrectQueueLocation()
             {
-                var executor = _consumer.AttachQueuedServices("connectionstring", new NotificationService(null));
+                var executor = _consumer.AttachQueuedServices("connectionstring", Substitute.For<INotificationService>());
 
                 var queueLoc = executor.Listeners.Single().Listener.QueueLocation;
 
@@ -41,7 +43,7 @@ namespace AzureSimpleQueue.Test
             [ExpectedException(typeof(InvalidOperationException))]
             public void ExceptionWhenUsingServiceWithNoAttribute()
             {
-                _consumer.AttachQueuedServices("connectionstring", new FakeService());
+                _consumer.AttachQueuedServices("connectionstring", Substitute.For<IFakeService>());
             }
         }
     }

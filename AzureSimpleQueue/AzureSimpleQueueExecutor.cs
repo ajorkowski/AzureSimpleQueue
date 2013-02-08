@@ -13,7 +13,7 @@ namespace AzureSimpleQueue
             _listeners = listeners;
         }
 
-        public void StartServices(int threadCount = 1)
+        public void Start(int threadCount = 1)
         {
             if (_isDisposed) { throw new ObjectDisposedException("AzureSimpleQueueExecutor"); }
 
@@ -23,7 +23,7 @@ namespace AzureSimpleQueue
             }
         }
 
-        public void StopServices()
+        public void Stop()
         {
             if (_isDisposed) { throw new ObjectDisposedException("AzureSimpleQueueExecutor"); }
 
@@ -37,7 +37,7 @@ namespace AzureSimpleQueue
         {
             if(!_isDisposed)
             {
-                StopServices();
+                Stop();
                 _isDisposed = true;
             }
         }
