@@ -106,8 +106,7 @@ var container = builder.Build();
 var consumer = container.Resolve<ISimpleQueueConsumer>();
 
 // Register the services
-string queueAccount = CloudApplicationConfiguration.Current.GetSection<StorageAccountConfigurationSection>(StorageAccountConfigurationSection.SectionName).DefaultQueueStorage;
-var services = consumer.AttachQueuedServices(queueAccount, container.Resolve<IExampleQueue>());
+var services = consumer.AttachQueuedServices("LocalStorage", container.Resolve<IExampleQueue>());
 ```
 
 ## Examples
