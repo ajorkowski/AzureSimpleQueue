@@ -2,19 +2,19 @@
 <package >
   <metadata>
     <id>AzureSimpleQueue</id>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
     <authors>Felix Jorkowski (jorkowski.com)</authors>
     <owners>Felix Jorkowski (jorkowski.com)</owners>
     <licenseUrl>http://www.opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/ajorkowski/AzureSimpleQueue</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A simple queue wrapper so that you can call queue services with easy to use functional expressions. Powered by the CloudFX library.</description>
-    <releaseNotes></releaseNotes>
+    <releaseNotes>Updated to use CloudFX v2.1.3</releaseNotes>
     <copyright>Copyright 2013</copyright>
     <tags>Azure Queue CloudFx Expression</tags>
     <dependencies>
-      <dependency id="Newtonsoft.Json" version="4.5.11" />
-      <dependency id="Microsoft.Experience.CloudFx" version="1.4.0.8" />
+      <dependency id="Newtonsoft.Json" version="5.0.6" />
+      <dependency id="Microsoft.Experience.CloudFx" version="2.1.3" />
     </dependencies>
   </metadata>
 </package>

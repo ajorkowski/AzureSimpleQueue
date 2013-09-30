@@ -39,7 +39,7 @@ namespace AzureSimpleQueue
                 throw new InvalidOperationException("Service type '" + service.GetType().Name + "' must inherit from an interface marked with the [QueuedService] attribute");
             }
 
-            var location = new CloudQueueLocation { QueueName = name, StorageAccount = storageAccountConnectionString };
+            var location = new CloudQueueDescription { QueueName = name, StorageAccount = storageAccountConnectionString };
             var listener = new CloudQueueListenerExtension<QueueMessage>(location, _component);
             return new AzureSimpleQueueListener(listener, service);
         }

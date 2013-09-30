@@ -26,7 +26,7 @@ namespace AzureSimpleQueue.Test
             {
                 var executor = _consumer.AttachQueuedServices("connectionstring", Substitute.For<INotificationService>());
 
-                var queueLoc = executor.Listeners.Single().Listener.QueueLocation;
+                var queueLoc = executor.Listeners.Single().Listener.QueueDescription;
 
                 Assert.AreEqual("Notification", queueLoc.QueueName);
                 Assert.AreEqual("connectionstring", queueLoc.StorageAccount);
